@@ -4,4 +4,6 @@ a=np.array([1,24,56,262,642,1,7,84,94,3,727,274,738,26,272,83,8,726,2,631,616,37
 
 def radix_sort(arr):
     try:
-        matrix = reshape
+        matrix = a.reshape()    
+    except ValueError:
+        print("error")
