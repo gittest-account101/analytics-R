@@ -1,0 +1,116 @@
+---
+title: "CN334 Data Analytics Lab Assignment"
+author: "Aakriti Sharma"
+output:
+  pdf_document: default
+  html_document: default
+date: "2026-03-18"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Q1. Data Exploration and Descriptive Statistics: #a. Program on data reading and writing using csv file. #b. Load a dataset of your choice and perform initial exploratory data analysis.
+
+```{r}
+data <- data.frame(
+  Name = c("A", "B", "C", "D", "E"),
+  Age = c(23, 25, 22, 24, 26),
+  Marks = c(85, 90, 78, 88, 92)
+)
+
+write.csv(data, "student_data.csv", row.names = FALSE)
+
+read_data <- read.csv("student_data.csv")
+
+print(read_data)
+data(iris)
+
+head(iris)
+
+str(iris)
+
+summary(iris)
+
+sum(is.na(iris))
+
+```
+#c. Calculate descriptive statistics (mean, median, standard deviation) for a specific variable in the dataset.
+
+```{r}
+mean_val <- mean(iris$Sepal.Length)
+
+median_val <- median(iris$Sepal.Length)
+
+sd_val <- sd(iris$Sepal.Length)
+
+
+cat("Mean:", mean_val, "\n")
+cat("Median:", median_val, "\n")
+cat("Standard Deviation:", sd_val, "\n")
+```
+#d. Visualize the distribution of a numerical variable using a histogram or box plot.
+```{r}
+boxplot(iris$Sepal.Length,
+        main = "Boxplot of Sepal Length",
+        col = "lightgreen")
+```
+
+## 2. Data Cleaning and Preprocessing:  
+#a. Handle missing values in a dataset using appropriate techniques (e.g., imputation, deletion)
+
+```{r}
+data(mtcars)
+head(mtcars)
+
+# Introduce missing values
+mtcars$mpg[1] <- NA
+mtcars$hp[5] <- NA
+# Count missing values
+colSums(is.na(mtcars))
+# Remove rows with missing values
+mtcars_clean <- na.omit(mtcars)
+# Replace NA with mean
+mtcars$mpg[is.na(mtcars$mpg)] <- mean(mtcars$mpg, na.rm = TRUE)
+mtcars$hp[is.na(mtcars$hp)] <- mean(mtcars$hp, na.rm = TRUE)
+```
+
+#b. Identify and handle outliers in a dataset using visualization and statistical methods.
+
+```{r}
+# Boxplot to detect outliers
+boxplot(mtcars$mpg, main = "Boxplot of MPG")
+
+# Calculate IQR
+Q1 <- quantile(mtcars$mpg, 0.25)
+Q3 <- quantile(mtcars$mpg, 0.75)
+IQR_val <- IQR(mtcars$mpg)
+
+# Define bounds
+lower_bound <- Q1 - 1.5 * IQR_val
+upper_bound <- Q3 + 1.5 * IQR_val
+
+# Identify outliers
+outliers <- mtcars$mpg[mtcars$mpg < lower_bound | mtcars$mpg > upper_bound]
+print(outliers)
+#Remove Outliers
+mtcars_no_outliers <- mtcars[mtcars$mpg >= lower_bound & mtcars$mpg <= upper_bound, ]
+#Replace Outliers with Median
+median_val <- median(mtcars$mpg)
+
+mtcars$mpg[mtcars$mpg < lower_bound | mtcars$mpg > upper_bound] <- median_val
+```
+
+#c. Perform data normalization or standardization on a numerical variable. 
+
+```{r}
+#Normalization (Min-Max Scaling)
+normalize <- function(x) {
+  (x - min(x)) / (max(x) - min(x))
+}
+
+mtcars$mpg_norm <- normalize(mtcars$mpg)
+
+head(mtcars$mpg_norm)
+```

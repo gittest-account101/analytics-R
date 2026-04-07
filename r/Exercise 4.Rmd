@@ -1,0 +1,273 @@
+---
+title: "CN334 Data Analytics"
+author: "Aakriti Sharma"
+date: "2026-03-23"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 4
+# function to calculate the means of a vector
+```{r}
+myMean <- function(y1) {
+  mean <- sum(y1)/length(y1)  
+  return(mean)                
+}
+# Test the function
+testVec <- rnorm(50, 20, 4)  
+mean(testVec) 
+myMean(testVec)               
+```
+# calculate t-test statistic
+```{r}
+twosam <- function(y1, y2) {
+  n1 <- length(y1)          
+  n2 <- length(y2)          
+  yb1 <- mean(y1)           
+  yb2 <- mean(y2)            
+  s1 <- var(y1)             
+  s2 <- var(y2)             
+  
+  s <- ((n1 - 1) * s1 + (n2 - 1) * s2)/(n1 + n2 - 2)  
+  tst <- (yb1 - yb2)/sqrt(s * (1/n1 + 1/n2))         
+  
+  return(tst)               
+}
+```
+# conditional statement
+# if statement
+```{r}
+x <- 9
+
+if (x > 0) sqrt(x) else sqrt(-x)
+# Vectorized version
+ifelse(x >= 0, sqrt(x), sqrt(-x))
+```
+# switch
+```{r}
+spread <- function(x, type) {
+  switch(type,
+         sd = sd(x),              
+         mad = mad(x),           
+         IQR = IQR(x)/1.349)     
+}
+samp <- rnorm(50)
+spread(samp, 2)
+spread(samp,"IQR")
+```
+# Repetitive execution
+# Forloops and while loops
+```{r}
+# For loop
+for (i in 1:5) print(i^2)
+# While loop 
+x <- 1
+y <- 16
+
+while (x^2 < y) {
+  cat(x, "squared is", x^2, "\n")   
+  x <- x + 1                        
+}
+```
+
+# Viewing Function Code
+```{r}
+# View arguments
+args(IQR)
+# View function body
+body(IQR)
+xx <- sample(1:30,10)
+quantile(xx)
+IQR(xx)
+```
+# methods to view the function
+```{r}
+#visible
+mean
+methods(mean)
+mean.default
+# Non visible
+`?`(t.test)
+t.test
+methods(t.test)
+```
+# To reduce the output
+```{r}
+head((stats:::t.test.default), 5)
+print("truncated...")
+tail((stats:::t.test.default),10)
+```
+# Apply function
+```{r}
+# Apply function on dataset
+summary(women)
+# Column means
+colMeans(women)
+# Apply mean column-wise
+apply(women, 2, mean)
+# Check equality
+testEq <- all(rowMeans(women) == apply(women, 1, mean))
+print(testEq)
+if(testEq) print("rowMeans is equivalent to apply(df,1,mean)")
+```
+# create a function using apply
+```{r}
+colSd <- function(df) apply(df,2,sd)
+colSd(women)
+```
+
+# tapply
+```{r}
+# Create groups
+ageSplit <- ifelse(women$weight < 35, "under35", "over35")
+print(ageSplit)
+# Apply function by group
+tapply(women$weight, ageSplit, length)
+tapply(women$weight, ageSplit, summary)
+```
+
+# lapply and sapply
+```{r}
+# Load built-in dataset
+data(ToothGrowth)   
+# Create list
+myList <- list(
+  ToothGrowth = ToothGrowth,      
+  WomenAge = women$age,         
+  beta = exp(-3:3),               
+  logicalVec = c(TRUE, FALSE, FALSE, TRUE)  
+)
+
+# Apply length function using lapply
+res1 <- lapply(myList, length)
+print(res1)
+
+# Print class of result
+print(paste("Class of res1:", class(res1)))
+
+# Simplified version using sapply
+res2 <- sapply(myList, length)
+print(res2)
+
+# Print class of result
+print(paste("Class of res2:", class(res2)))
+```
+
+# Efficient for loop in R(use apply)
+```{r}
+myList <- list(WomenMat = women, WomenAge = women$age, beta = exp(-3:3),
+               logicalVec = c(TRUE, FALSE, FALSE, TRUE))
+
+# compute the list mean for each element
+res1 <- lapply(myList, length)
+
+print(res1)
+print(paste("Class of res1:", class(res1)))
+
+res2 <- sapply(myList, length)
+
+print(res2)
+print(paste("Class of res2:", class(res2)))
+```
+
+# use built-in function
+```{r}
+# Create large matrix
+myMA <- matrix(rnorm(1e+06), 1e+05, 10, dimnames = list(1:1e+05, paste("V", 1:10, sep="")))
+
+results <- NULL
+system.time(for (i in seq(along = myMA[,1])) results <- c(results, mean(myMA[i, ])))
+
+results <- numeric(length(myMA[,1]))
+system.time(for (i in seq(along = myMA[,1])) results[i] <- mean(myMA[i, ]))
+
+system.time(myMAmean <- apply(myMA, 1, mean))
+system.time(myMAsd <- apply(myMA, 1, sd))
+system.time(myMAsd <- sqrt((rowSums((myMA - rowMeans(myMA))^2))/
+                           (length(myMA[,1]) - 1)))
+```
+# Function for parsing text
+```{r}
+# grep
+grep("A", LETTERS)
+grep("A", LETTERS, value = TRUE)
+#sub()
+# Substitute characters within a string
+sub("B", "A", LETTERS)
+# strsplit
+# Split a character string
+a <- date()
+strsplit(a, " ")
+strsplit(a, "J ")
+b <- strsplit(a, " 11")
+class(b)
+b <- unlist(b)
+class(b)
+# For special characters use double backslash
+a <- "aedin@jimmy.harvard.edu"
+strsplit(a, "\\.")
+```
+# missing values
+```{r}
+# Create vector with NA values
+a <- c(1:10, NA, NA)
+a <- c(1:10, NA, NA)
+# Summary shows statistics and number of NA values
+summary(a)
+# Mean without handling NA
+mean(a)
+# Mean after removing NA values
+mean(a, na.rm = TRUE)
+```
+# writing Function
+```{r}
+# default values
+prob <- c(0.5, 0.9, 0.95, 0.975, 0.99)
+args (qnorm)
+qnorm (prob)
+qnorm(prob, 2)
+qnorm(prob, mean = 2, sd = 1)
+
+#positional arguments
+prob <- c(0.5, 0.9, 0.95, 0.975, 0.99)
+args (qnorm)
+qnorm (p = prob, mean = 0, sd = 1, lower.tail = TRUE, log.p =
+FALSE)
+qnorm(prob, 0, 1, log = FALSE, low = TRUE)
+qnorm(prob, 0, 1, TRUE, FALSE)
+```
+# scoping
+```{r}
+fn <- function(x) {
+y <- 2 * x
+print (x)
+print (y)
+print (z)
+}
+
+z <- 2
+x <- 4
+fn(x = 2)
+```
+# Lexical scope
+```{r}
+cube <- function (n) {
+sq <- function () n * n
+n * sq()
+}
+cube (2)
+n <- 4
+cube (2)
+```
+
+# System time
+```{r}
+df <- matrix(rnorm(5e+06), ncol = 20000)
+system.time (apply (df, 1, mean))
+system.time (rowMeans (df) )
+```

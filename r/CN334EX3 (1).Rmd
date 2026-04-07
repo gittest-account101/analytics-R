@@ -1,0 +1,35 @@
+---
+title: "CN334 Data Analytics"
+author: "Aakriti Sharma"
+date: "2026-03-23"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 3
+
+##Read the help file
+
+```{r}
+help(read.table)
+
+
+# read.csv
+# Comma Delimited
+Iris <- read.csv("C:/Users/Student/Documents/r/iris_data.csv")
+
+# Display first 2 rows
+Iris[1:2, ]
+```
+
+## Reading data from website
+
+```{r}
+myURL <- "https://raw.githubusercontent.com/mwaskom/seaborn-data/master/iris.csv"
+read.csv(myURL)[1:2, ]
+```

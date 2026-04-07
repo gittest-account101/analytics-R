@@ -1,0 +1,193 @@
+---
+title: "CN334 Data Analytics Lab Assignment"
+author: "Aakriti Sharma"
+date: "2026-03-19"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Exercise 1
+#Plot
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+plot(1:10)
+plot(rnorm(10), 1:10)
+```
+# commands
+# What is my current directory
+```{r}
+getwd()
+```
+#To see folders or files in the working directory
+```{r}
+dir()
+dir(pattern = ".txt")
+```
+# Managing and accessing folders in R
+```{r}
+# check if the directory or file exisits
+file.exists("colonJan13")
+# Create a directoryfolder
+dir.create("colonJan13")
+setwd("colonJan13")
+```
+
+# For cross-platform compatibility, its best to use file.path() to create paths. for example
+```{r}
+wkdir <- getwd()
+newdir <- "MyNewDir"
+subdir <- "Project1"
+newdirPath <- file.path(wkdir, newdir, subdir)
+if (file.exists(wkdir)) dir.create(newdirPath)
+dir(pattern = "My")
+```
+
+# Path expand
+```{r}
+path.expand("~")
+myhome <- path.expand("~")
+newdir <- file.path(path.expand("~"), "Rwork", " colonJan13")
+```
+
+# view OR change of home directory
+```{r}
+Sys.getenv("HOME")
+Sys.setenv(HOME = "path") 
+```
+
+# demo examples
+```{r}
+demo(graphics)
+demo(nlm)
+```
+# Getting help with functions and features
+```{r}
+## help or ? will open a help page
+help(lm)
+# ?matrix
+`?`(matrix)
+## The functions find() or apropos() will search for a command
+apropos("mean")
+## The function example will run example of a command
+example(rep)
+```
+
+# keyword search (If you don’t know the command)
+```{r}
+help.search("combination")
+help.start()
+```
+
+# R as a big calculator
+```{r}
+2 + 2
+2 * 2
+2 * 100/4
+2 * 100/4+ 2
+2 * 100/(4 + 2)
+2^10
+log(2)
+```
+
+# store the value of (tmpVal=log(2))
+```{r}
+tmpVal <-log(2)
+print(tmpVal)
+tmpVal
+exp(tmpVal)
+```
+
+# Elementary commands
+```{r}
+2 * 5^2
+x <-2 * 5^2
+print(x)
+```
+# Assignment operators are:<-,=,->
+```{r}
+2 * 5^2
+y <-2 * 5^2
+z <-2 * 5^2
+z <-2 * 5^2
+print(y)
+x== y
+y== z
+```
+
+# generating random numbers 
+```{r}
+rnorm(5)
+```
+
+# Basic Operators
+# Comparison operators
+```{r}
+x<-5
+y<-9
+# equal 
+x == y 
+# not equal
+x != y
+# greater than
+x > y
+# less than 
+x < y
+#greater than or equal
+x >= 5
+#less than or equal
+y <= 10
+```
+
+# Logical operators
+#AND
+```{r}
+x <- 1:10
+y <- 10:1
+x > y & x > 5
+```
+
+# OR
+```{r}
+x == y | x != y
+```
+
+# NOT
+```{r}
+!x > y
+```
+
+# Data set in R
+```{r}
+data(women)
+ls()
+ls(pattern = "w")
+```
+
+# Rsessions (workspace) and saving session history
+```{r}
+save(women, file = "women.RData")
+save.image(file = "entireL2session.RData")
+rm(women)
+ls(pattern = "women")
+load("women.RData")
+ls(pattern = "women")
+```
+
+#To view most recent R commands in a session
+```{r}
+history()
+help(history)
+history(100)
+history(pattern = "save")
+savehistory(file = "L2.Rhistory")
+```
+
